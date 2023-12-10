@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public enum GameState { Start, Running, End }
     
-    [SerializeField] private UIManager uiManager;
+    // [SerializeField] private UIManager uiManager;
     [SerializeField] private TrialRunner runner;
     [SerializeField] private int trialCount;
     
@@ -27,14 +27,14 @@ public class GameManager : MonoBehaviour
     void GameStart()
     {
         currState = GameState.Running;
-        uiManager.HideStartMenu();
+        // uiManager.HideStartMenu();
         runner.InitializeTrials(trialCount);
         runner.finish += GameFinish;
     }
     private void GameFinish()
     {
         currState  = GameState.End;
-        uiManager.ShowEndMenu(runner.score);
+        // uiManager.ShowEndMenu(runner.score);
         print($"GameFinish+ {runner.score}/{trialCount}");
     }
 

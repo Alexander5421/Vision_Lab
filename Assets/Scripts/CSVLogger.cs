@@ -57,7 +57,7 @@ public class EntryInfo : ICsvable
     public string Serialize()
     {
 
-        return $"{respkeys},{correctness},{reactionTime},[{string.Join(",", stimuli_locs)}],{TotolSetSize},{trialType}";
+        return $"{respkeys},{correctness},{reactionTime},\"[{string.Join(",", stimuli_locs)}]\",{TotolSetSize},{trialType}";
     }
 
     // csv header for this class, return each field name
@@ -80,7 +80,6 @@ public class CSVLogger : MonoBehaviour
         path = Path.Combine(rootPath, $"{fileName}.csv");//rootPath + "/" + fileName + ".csv";
         Debug.Log(path);
         // create a file
-
         using StreamWriter sw = new StreamWriter(path);
         sw.WriteLine(string.Join(",", header));
 
@@ -93,10 +92,21 @@ public class CSVLogger : MonoBehaviour
         sw.WriteLine(newEntry);
     }
 
-    [ContextMenu("Test")]
-    public void Test()
+    public void AddDataWithUserInfo(string newEntry)
     {
-        print(userInfo.Header());
+        using StreamWriter sw = new StreamWriter(path, true);
+        sw.WriteLine($"{newEntry},{userInfo.Serialize()}");
+    }
+
+    [ContextMenu("Header Generator(it will overwrite the header)")]
+    public void HeaderGenerator()
+    {
+        List<string> newHeader = new List<string>();
+        // first use the header from the entryInfo then add the user info
+        var entryInfo = new EntryInfo();
+        newHeader.AddRange(entryInfo.Header().Split(','));
+        newHeader.AddRange(userInfo.Header().Split(','));
+        header = newHeader;
     }
 }
 

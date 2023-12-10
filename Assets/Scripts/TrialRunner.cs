@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class TrialRunner:MonoBehaviour
 {
+    
     public enum Direction
     {
         left,
@@ -21,6 +23,11 @@ public class TrialRunner:MonoBehaviour
     public Action finish;
     public List<Stimulus> stimuliList = new List<Stimulus>();
     private UserInput userInput;
+    private Stopwatch stopwatch;
+    private EntryInfo entryInfo;
+    [SerializeField]
+    private CSVLogger csvLogger;
+    
 
     public void Awake()
     {
@@ -41,6 +48,12 @@ public class TrialRunner:MonoBehaviour
         {
             ReceiveInput(true);
         };
+        
+        // create a new file
+        string fileName = $"{DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
+        csvLogger.Initialize(fileName);
+        
+        
         // first run
         NewRun();
     }
@@ -64,10 +77,16 @@ public class TrialRunner:MonoBehaviour
         {
             // finish
             finish.Invoke();
+            // disable this script
+            this.enabled = false;
         }
     }
     private void ReceiveInput(bool isRight)
     {
+        stopwatch.Stop();
+        entryInfo.respkeys = isRight ? "right" : "left";
+        entryInfo.correctness = isRight == (correctDirection == Direction.right) ? "correct" : "incorrect";
+        entryInfo.reactionTime = stopwatch.ElapsedMilliseconds.ToString();
         if (isRight)
         {
             if (correctDirection == Direction.right)
@@ -83,6 +102,7 @@ public class TrialRunner:MonoBehaviour
             }
         }
         currRunIndex++;
+        csvLogger.AddDataWithUserInfo(entryInfo.Serialize());
         NewRun();
         
     }
@@ -128,6 +148,11 @@ public class TrialRunner:MonoBehaviour
             }
         }
         
-        
+        entryInfo = new EntryInfo();
+        entryInfo.stimuli_locs = stimuliPositions.Select(arg => arg.GetSiblingIndex()).ToList();
+        entryInfo.trialType = "experiment";
+
+        stopwatch = new Stopwatch();
+        stopwatch.Start();
     }
 }
