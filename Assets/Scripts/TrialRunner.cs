@@ -25,37 +25,46 @@ public class TrialRunner:MonoBehaviour
     private UserInput userInput;
     private Stopwatch stopwatch;
     private EntryInfo entryInfo;
+    private string trialType;
     [SerializeField]
     private CSVLogger csvLogger;
     
 
     public void Awake()
     {
-        this.enabled = false;
-    }
-
-    public void InitializeTrials(int totalCount)
-    {
-        totalRunCount = totalCount;
-        userInput = new UserInput();
-        this.enabled = true;
-        userInput.gameplay.Left.performed += ctx =>
-        {
-            ReceiveInput(false);
-        };
-        
-        userInput.gameplay.Right.performed += ctx =>
-        {
-            ReceiveInput(true);
-        };
-        
+        this.enabled = false; 
         // create a new file
         string fileName = $"{DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
         csvLogger.Initialize(fileName);
-        
-        
+        InitializeInputs();
+    }
+
+    public void InitializeTrials(int totalCount,string trialType)
+    {
+       
+        this.enabled = true;
+        score = 0;
+        currRunIndex = 0;
+        totalRunCount = totalCount;
+        this.trialType = trialType;
         // first run
         NewRun();
+    }
+
+    private void InitializeInputs()
+    {
+        userInput = new UserInput();
+        userInput.gameplay.Left.performed += ctx =>
+        {
+            print("input received");
+            ReceiveInput(false);
+        };
+
+        userInput.gameplay.Right.performed += ctx =>
+        {
+            print("input received");
+            ReceiveInput(true);
+        };
     }
 
     private void OnEnable()
@@ -77,6 +86,7 @@ public class TrialRunner:MonoBehaviour
         {
             // finish
             finish.Invoke();
+            ClearStimuli();
             // disable this script
             this.enabled = false;
         }
@@ -109,15 +119,7 @@ public class TrialRunner:MonoBehaviour
 
     private void StartNewRun()
     {
-        // if stimuliList is not empty, destroy all
-        if (stimuliList.Count > 0)
-        {
-            foreach (var stimulus in stimuliList)
-            {
-                Destroy(stimulus.gameObject);
-            }
-            stimuliList.Clear();
-        }
+        ClearStimuli();
         int totalStimuli = Random.Range(candidatePosition.Length-2,candidatePosition.Length+1);
         // from candidatePosition array, randomly select totalStimuli and create a new array
         
@@ -150,9 +152,23 @@ public class TrialRunner:MonoBehaviour
         
         entryInfo = new EntryInfo();
         entryInfo.stimuli_locs = stimuliPositions.Select(arg => arg.GetSiblingIndex()).ToList();
-        entryInfo.trialType = "experiment";
+        entryInfo.trialType = trialType;
 
         stopwatch = new Stopwatch();
         stopwatch.Start();
+    }
+
+    private void ClearStimuli()
+    {
+        // if stimuliList is not empty, destroy all
+        if (stimuliList.Count > 0)
+        {
+            foreach (var stimulus in stimuliList)
+            {
+                Destroy(stimulus.gameObject);
+            }
+
+            stimuliList.Clear();
+        }
     }
 }
