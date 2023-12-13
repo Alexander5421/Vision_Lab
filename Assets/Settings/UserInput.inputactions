@@ -38,8 +38,8 @@
                 },
                 {
                     "name": "",
-                    "id": "b7b54fab-7d1b-4992-a11c-d17c2855a5a7",
-                    "path": "<XRController>{LeftHand}/{PrimaryAction}",
+                    "id": "af2a0c94-c14a-46c6-91c0-c3582d3358ba",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -49,8 +49,8 @@
                 },
                 {
                     "name": "",
-                    "id": "af2a0c94-c14a-46c6-91c0-c3582d3358ba",
-                    "path": "<Keyboard>/a",
+                    "id": "c2e18736-1817-42bc-8738-cfc983c846c2",
+                    "path": "<ViveCosmosController>{LeftHand}/primaryButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -82,8 +82,8 @@
                 },
                 {
                     "name": "",
-                    "id": "222d04fa-1ccc-4782-afe4-ac5f111ad199",
-                    "path": "<XRController>{RightHand}/{PrimaryAction}",
+                    "id": "c6721aa0-5899-45c3-8ced-c1a8f1a25640",
+                    "path": "<ViveCosmosController>{RightHand}/primaryButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

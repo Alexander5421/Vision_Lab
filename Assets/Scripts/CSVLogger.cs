@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Unity.Mathematics;
 using UnityEngine;
 
 // provide following feature
@@ -77,7 +78,8 @@ public class CSVLogger : MonoBehaviour
     // called when the game starts
     public void Initialize(string fileName)
     {
-        path = Path.Combine(rootPath, $"{fileName}.csv");//rootPath + "/" + fileName + ".csv";
+        // unity path
+        path = Path.GetFullPath(Path.Combine(Application.dataPath,rootPath, $"{fileName}.csv"));//rootPath + "/" + fileName + ".csv";
         Debug.Log(path);
         // create a file
         using StreamWriter sw = new StreamWriter(path);
@@ -111,4 +113,74 @@ public class CSVLogger : MonoBehaviour
 }
 
 
+public class Solution {
+    public int NumSpecial(int[][] mat)
+    {
+        int m = mat.Length;
+        int n = mat[0].Length;
+        // each row how many 1;
+        int[] row = new int[m];
+        Array.Fill(row,-1);
+        // each col how many 1;
+        int[] col = new int[n];
+        Array.Fill(col,-1);
+        for (int i = 0; i < m; i++)
+        {
+            int count = 0;
+            for (int j = 0; j < n; j++)
+            {
+                if (mat[i][j] == 1)
+                {
+                    count++;
+                    if (count >= 2)
+                    {
+                        break;
+                    }
+                }
+            }
 
+            row[i] = count;
+        }
+
+        for (int j = 0; j < n; j++)
+        {
+            int count = 0;
+            for (int i = 0; i < m; i++)
+            {
+                if (mat[i][j] == 1)
+                {
+                    count++;
+                    if (count >= 2)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            col[j] = count;
+        }
+
+        int res = 0;
+        for (int i = 0; i < m; i++)
+        {
+            if (row[i] != 1)
+            {
+                continue;
+            }
+            for (int j = 0; j < n; j++)
+            {
+                if (mat[i][j] == 1)
+                {
+                    if (col[j] == 1)
+                    {
+                        res++;
+                    }
+                    break;
+                    
+                }
+            }
+        }
+
+        return res;
+    }
+}
