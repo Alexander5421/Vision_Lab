@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 public class TrialRunner:MonoBehaviour
 {
-    
     public enum Direction
     {
         left,
@@ -27,6 +27,7 @@ public class TrialRunner:MonoBehaviour
     private Stopwatch stopwatch;
     private EntryInfo entryInfo;
     private string trialType;
+    private float cooldown;
     [SerializeField]
     private CSVLogger csvLogger;
     
@@ -112,11 +113,15 @@ public class TrialRunner:MonoBehaviour
                 score++;
             }
         }
+        // score += ((correctDirection==Direction.right)==isRight)?1:0;
         currRunIndex++;
         csvLogger.AddDataWithUserInfo(entryInfo.Serialize());
+        ClearStimuli();
         NewRun();
-        
+
+
     }
+
 
     private void StartNewRun()
     {
@@ -150,7 +155,7 @@ public class TrialRunner:MonoBehaviour
                 // create distraction
                 Stimulus distraction = Instantiate(distractionPrefab, stimuliPositions[i]);
                 stimuliList.Add(distraction);
-                distraction.SetSphere(correctDirection == Direction.right);
+                distraction.SetSphere(Random.Range(0, 2) == 1);
             }
         }
         
@@ -162,6 +167,7 @@ public class TrialRunner:MonoBehaviour
         stopwatch = new Stopwatch();
         stopwatch.Start();
     }
+
 
     private void ClearStimuli()
     {
