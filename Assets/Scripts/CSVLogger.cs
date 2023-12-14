@@ -46,6 +46,7 @@ public class UserInfo : ICsvable
 public class EntryInfo : ICsvable
 {
     public string respkeys;
+    public int condition;
     public string correctness;
     public string reactionTime;
     public List<int> stimuli_locs;
@@ -58,13 +59,13 @@ public class EntryInfo : ICsvable
     public string Serialize()
     {
 
-        return $"{respkeys},{correctness},{reactionTime},\"[{string.Join(",", stimuli_locs)}]\",{TotolSetSize},{trialType}";
+        return $"{respkeys},{condition},{correctness},{reactionTime},\"[{string.Join(",", stimuli_locs)}]\",{TotolSetSize},{trialType}";
     }
 
     // csv header for this class, return each field name
     public string Header()
     {
-        return "respkeys,correctness,reactionTime,stimuli_locs,TotolSetSize,trialType";
+        return "respkeys,condition,correctness,reactionTime,stimuli_locs,TotolSetSize,trialType";
     }
 }
 public class CSVLogger : MonoBehaviour

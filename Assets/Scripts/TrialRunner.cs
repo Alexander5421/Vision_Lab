@@ -16,6 +16,7 @@ public class TrialRunner:MonoBehaviour
     public Stimulus targetPrefab;
     public Stimulus distractionPrefab;
     public Transform[] candidatePosition;
+    public Transform[] candidatePosition2D;
     public int score;
     public int currRunIndex = 0;
     public int totalRunCount = 0;
@@ -120,10 +121,13 @@ public class TrialRunner:MonoBehaviour
     private void StartNewRun()
     {
         ClearStimuli();
-        int totalStimuli = Random.Range(candidatePosition.Length-2,candidatePosition.Length+1);
+        // first decide 2D or 3D
+        bool is3D = Random.Range(0, 2) == 1;
+        var realCandidatePosition = is3D ? candidatePosition : candidatePosition2D;
+        int totalStimuli = Random.Range(realCandidatePosition.Length-2,realCandidatePosition.Length+1);
         // from candidatePosition array, randomly select totalStimuli and create a new array
         
-        Transform[] stimuliPositions=candidatePosition.ToList().OrderBy(arg => Guid.NewGuid()).Take(totalStimuli).ToArray();
+        Transform[] stimuliPositions=realCandidatePosition.ToList().OrderBy(arg => Guid.NewGuid()).Take(totalStimuli).ToArray();
         
         
         int targetLocation= Random.Range(0,totalStimuli);
@@ -153,6 +157,7 @@ public class TrialRunner:MonoBehaviour
         entryInfo = new EntryInfo();
         entryInfo.stimuli_locs = stimuliPositions.Select(arg => arg.GetSiblingIndex()).ToList();
         entryInfo.trialType = trialType;
+        entryInfo.condition = is3D ? 2 : 1;
 
         stopwatch = new Stopwatch();
         stopwatch.Start();
