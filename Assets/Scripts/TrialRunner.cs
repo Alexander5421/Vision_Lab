@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
@@ -15,6 +16,9 @@ public class TrialRunner:MonoBehaviour
     }
     public Stimulus targetPrefab;
     public Stimulus distractionPrefab;
+    public Stimulus targetPrefab2D;
+    public Stimulus distractionPrefab2D;
+    
     public Transform[] candidatePosition;
     public Transform[] candidatePosition2D;
     public int score;
@@ -137,13 +141,25 @@ public class TrialRunner:MonoBehaviour
         
         int targetLocation= Random.Range(0,totalStimuli);
         // other stimuli are distraction
+        Stimulus targetPrefabLocal;
+        Stimulus distractionPrefabLocal;
+        if (is3D)
+        {
+            targetPrefabLocal = targetPrefab;
+             distractionPrefabLocal = distractionPrefab;
+        }
+        else
+        {
+            targetPrefabLocal = targetPrefab2D;
+            distractionPrefabLocal = distractionPrefab2D;
+        }
         for (int i = 0; i < totalStimuli; i++)
         {
             if (i == targetLocation)
             {
                 // create target
                 // as the child of stimuliPositions[i]
-                Stimulus target = Instantiate(targetPrefab,stimuliPositions[i]);
+                Stimulus target = Instantiate(targetPrefabLocal,stimuliPositions[i]);
                 stimuliList.Add(target);
                 // set target direction randomly and set correctDirection
                 bool isRight = Random.Range(0, 2) == 1;
@@ -153,7 +169,7 @@ public class TrialRunner:MonoBehaviour
             else
             {
                 // create distraction
-                Stimulus distraction = Instantiate(distractionPrefab, stimuliPositions[i]);
+                Stimulus distraction = Instantiate(distractionPrefabLocal, stimuliPositions[i]);
                 stimuliList.Add(distraction);
                 distraction.SetSphere(Random.Range(0, 2) == 1);
             }
