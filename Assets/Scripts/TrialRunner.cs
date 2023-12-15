@@ -58,14 +58,14 @@ public class TrialRunner:MonoBehaviour
         userInput = new UserInput();
         userInput.gameplay.Left.performed += ctx =>
         {
-            print("input received");
             ReceiveInput(false);
+            print("input received");
         };
 
         userInput.gameplay.Right.performed += ctx =>
         {
-            print("input received");
             ReceiveInput(true);
+            print("input received");
         };
     }
 
